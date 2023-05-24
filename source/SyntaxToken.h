@@ -13,7 +13,9 @@ enum SyntaxKind {
 	OPEN_PARENTHESIS_TOKEN,
 	CLOSE_PARENTHESIS_TOKEN,
 	BAD_TOKEN,
-	EOF_TOKEN
+	EOF_TOKEN,
+
+	NUMBER_EXP
 };
 
 class SyntaxToken {
