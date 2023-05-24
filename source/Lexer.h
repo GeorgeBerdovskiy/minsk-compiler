@@ -1,9 +1,13 @@
 #ifndef _LEXER_H_
 #define _LEXER_H_
 
+#include <iostream>
+#include <string>
+#include "SyntaxToken.h"
+
 class Lexer {
 	private:
-		const std::string text;
+		std::string text;
 		int position;
 		
 		char get_current_char();

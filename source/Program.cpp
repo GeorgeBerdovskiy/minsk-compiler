@@ -2,6 +2,9 @@
 #include <cctype>
 #include <string>
 
+#include "Lexer.h"
+#include "SyntaxToken.h"
+
 int main() {
 	// Input string
 	std::string input;
@@ -12,6 +15,17 @@ int main() {
 	while (true) {
 		std::cout << "> ";
 		std::getline(std::cin, input);
+
+		Lexer lexer = Lexer(input);
+		while(true) {
+			SyntaxToken token = lexer.next_token();
+			
+			if (token.get_kind() == SyntaxKind::EOF_TOKEN) {
+				break;
+			}
+			
+			std::cout << token.get_kind() << ":" << token.get_text() << std::endl;
+		}
 
 		// Exit when user enters 'E'
 		if (input == "E") return 0;
