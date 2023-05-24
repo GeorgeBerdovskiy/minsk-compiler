@@ -12,4 +12,12 @@ We'll start with a Lexer class to turn code into "words"
 ## Lexer and Syntax Tokens
 - A syntax token is kind of like a word
 
-**Stopped at 22:40**
+## Beginning the Parser
+- The lexer produces tokens
+	- "Leaves"
+- The parser produces "sentences" using the tokens
+	 - Trees of leaves
+
+
+**Stopped at 39:00**
+
