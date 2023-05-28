@@ -5,7 +5,10 @@
 
 // Serves as "base" class, not meant to be used directly
 class SyntaxNode {
+	private:
+		std::vector<SyntaxNode> children;
 	public:
+		virtual std::vector<SyntaxNode> get_children();
 		virtual SyntaxKind get_syntax_kind() = 0;
 };
 

@@ -1,6 +1,7 @@
 #ifndef _SYNTAX_TOKEN_H_
 #define _SYNTAX_TOKEN_H_
 
+#include "SyntaxNode.h"
 #include <string>
 
 enum SyntaxKind {
@@ -21,7 +22,7 @@ enum SyntaxKind {
 	BINARY_EXP
 };
 
-class SyntaxToken {
+class SyntaxToken : public virtual SyntaxNode {
 	private:
 		SyntaxKind kind;
 		int position;
