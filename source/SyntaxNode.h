@@ -27,17 +27,17 @@ class NumberExpressionSyntax final : public virtual ExpressionSyntax {
 		virtual SyntaxKind get_syntax_kind() override;
 };
 
-class BinaryExpressionSyntax final : public virtual ExpressionSyntax {
+class BinaryExpressionSyntax final : virtual public ExpressionSyntax {
 	private:
 		ExpressionSyntax* left;
-		SyntaxNode operator_node;
+		SyntaxToken operator_node;
 		ExpressionSyntax* right;
 	public:
 		BinaryExpressionSyntax();
 		BinaryExpressionSyntax(ExpressionSyntax*, SyntaxToken, ExpressionSyntax*);
 
 		ExpressionSyntax* get_left();
-		SyntaxNode get_operator_node();
+		SyntaxToken get_operator_node();
 		ExpressionSyntax* get_right();
 
 		virtual SyntaxKind get_syntax_kind() override;

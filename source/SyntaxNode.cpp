@@ -11,8 +11,8 @@ SyntaxKind ExpressionSyntax::get_syntax_kind() {
 
 // ---- ---- ---- ---- ---- ---- ----
 
-NumberSyntax::NumberExpressionSyntax(SyntaxToken _number_token) {
-	this -> number_token = _number_token;
+NumberExpressionSyntax::NumberExpressionSyntax(SyntaxToken _number_token) : number_token(_number_token) {
+	// Nothing to do here
 }
 
 SyntaxToken NumberExpressionSyntax::get_number_token() {
@@ -24,21 +24,22 @@ SyntaxKind NumberExpressionSyntax::get_syntax_kind() {
 }
 
 // Binary expressions
-BinaryExpressionSyntax::BinaryExpressionSyntax(ExpressionSyntax* _left, SyntaxToken _operator_node, ExpressionSyntax* _right) {
+BinaryExpressionSyntax::BinaryExpressionSyntax(ExpressionSyntax* _left, SyntaxToken _operator_node, ExpressionSyntax* _right)
+	: operator_node(_operator_node) {
 	this -> left = _left;
 	this -> operator_node = _operator_node;
 	this -> right = _right;
 }
 
-ExpressionSyntax* get_left() {
+ExpressionSyntax* BinaryExpressionSyntax::get_left() {
 	return this -> left;
 }
 
-SyntaxNode get_operator_node() {
+SyntaxToken BinaryExpressionSyntax::get_operator_node() {
 	return this -> operator_node;
 }
 
-ExpressionSyntax* get_right() {
+ExpressionSyntax* BinaryExpressionSyntax::get_right() {
 	return this -> right;
 }
 

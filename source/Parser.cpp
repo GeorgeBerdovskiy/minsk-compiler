@@ -32,7 +32,7 @@ SyntaxToken Parser::match(SyntaxKind kind) {
 
 ExpressionSyntax* Parser::parse() {
 	ExpressionSyntax* left = this -> parse_primary_expression();
-	BinaryExpressionSyntax* result;
+	ExpressionSyntax* result = NULL;
 
 	while ( this -> current() -> get_kind() == SyntaxKind::PLUS_TOKEN ||
 		this -> current() -> get_kind() == SyntaxKind::MINUS_TOKEN) {
