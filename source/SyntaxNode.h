@@ -10,19 +10,37 @@ class SyntaxNode {
 };
 
 // Also "base" class (called "abstract" in C#)
-class ExpressionSyntax : public SyntaxNode { // Should this be "virtual public"?
+class ExpressionSyntax : public virtual SyntaxNode { // Should this be "virtual public"?
+	public:
+		virtual SyntaxKind get_syntax_kind();
 };
 
-class NumberSyntax final : public ExpressionSyntax {
+class NumberExpressionSyntax final : public virtual ExpressionSyntax {
 	private:
 		SyntaxToken number_token;
 
 	public:
-		NumberSyntax(SyntaxToken _number_token);
+		NumberExpressionSyntax(SyntaxToken _number_token);
 
 		// This may need to be a pointer?
 		SyntaxToken get_number_token();
-		SyntaxKind get_syntax_kind() override;
+		virtual SyntaxKind get_syntax_kind() override;
+};
+
+class BinaryExpressionSyntax final : public virtual ExpressionSyntax {
+	private:
+		ExpressionSyntax* left;
+		SyntaxNode operator_node;
+		ExpressionSyntax* right;
+	public:
+		BinaryExpressionSyntax();
+		BinaryExpressionSyntax(ExpressionSyntax*, SyntaxToken, ExpressionSyntax*);
+
+		ExpressionSyntax* get_left();
+		SyntaxNode get_operator_node();
+		ExpressionSyntax* get_right();
+
+		virtual SyntaxKind get_syntax_kind() override;
 };
 
 /*
@@ -38,6 +56,6 @@ class NumberSyntax final : public ExpressionSyntax {
  * 1 = Number node
  * + = binary operator node
  *
- * /
+ */
 
 #endif // _SYNTAX_NODE_H_

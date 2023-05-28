@@ -4,6 +4,8 @@
 #include <string>
 
 enum SyntaxKind {
+	NONE,
+
 	NUMBER_TOKEN,
 	WHITESPACE_TOKEN,
 	PLUS_TOKEN,
@@ -15,7 +17,8 @@ enum SyntaxKind {
 	BAD_TOKEN,
 	EOF_TOKEN,
 
-	NUMBER_EXP
+	NUMBER_EXP,
+	BINARY_EXP
 };
 
 class SyntaxToken {

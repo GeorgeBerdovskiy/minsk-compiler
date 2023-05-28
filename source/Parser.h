@@ -2,6 +2,7 @@
 #define _PARSER_H_
 
 #include "SyntaxToken.h"
+#include "SyntaxNode.h"
 #include <vector>
 
 class Parser {
@@ -11,8 +12,14 @@ class Parser {
 
 		SyntaxToken* peek(int offset);
 		SyntaxToken* current();
+
+		SyntaxToken* next_token();
 	public:
 		Parser();
+
+		SyntaxToken match(SyntaxKind);
+		ExpressionSyntax* parse();
+		ExpressionSyntax* parse_primary_expression();
 };
 
 #endif // _PARSER_H_
