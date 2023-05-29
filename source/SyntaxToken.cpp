@@ -1,4 +1,4 @@
-#include "SyntaxToken.h"
+#include "SyntaxNode.h"
 
 SyntaxToken::SyntaxToken(SyntaxKind _kind, int _position, std::string _text) {
 	this -> kind = _kind;
@@ -6,7 +6,7 @@ SyntaxToken::SyntaxToken(SyntaxKind _kind, int _position, std::string _text) {
 	this -> text = _text;
 }
 
-SyntaxKind SyntaxToken::get_kind() {
+SyntaxKind SyntaxToken::get_syntax_kind() {
 	return this -> kind;
 }
 
@@ -16,4 +16,9 @@ int SyntaxToken::get_position() {
 
 std::string SyntaxToken::get_text() {
 	return this -> text;
+}
+
+std::vector<SyntaxNode*> SyntaxToken::get_children() {
+	std::vector<SyntaxNode*> empty;
+	return empty;
 }

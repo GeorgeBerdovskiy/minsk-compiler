@@ -1,7 +1,6 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
-#include "SyntaxToken.h"
 #include "SyntaxNode.h"
 #include <vector>
 
@@ -15,7 +14,7 @@ class Parser {
 
 		SyntaxToken* next_token();
 	public:
-		Parser();
+		Parser(std::string text);
 
 		SyntaxToken match(SyntaxKind);
 		ExpressionSyntax* parse();

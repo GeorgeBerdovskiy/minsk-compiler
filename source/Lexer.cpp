@@ -17,7 +17,7 @@ void Lexer::next() {
 	this -> position += 1;
 }
 
-SyntaxToken Lexer::next_token() {
+SyntaxToken* Lexer::next_token() {
 	/*
 	 * <numbers>
 	 * + - * / ()
@@ -26,7 +26,7 @@ SyntaxToken Lexer::next_token() {
 	 */
 
 	if (this -> position >= (this -> text).size()) {
-		return SyntaxToken(SyntaxKind::EOF_TOKEN, this -> position, "\0");
+		return new SyntaxToken(SyntaxKind::EOF_TOKEN, this -> position, "\0");
 	}
 
 	if (isdigit(this -> get_current_char())) {
@@ -39,7 +39,7 @@ SyntaxToken Lexer::next_token() {
 		int length = (this -> position) - start;
 		std::string text = (this -> text).substr(start, length);
 
-		return SyntaxToken(SyntaxKind::NUMBER_TOKEN, start, text);
+		return new SyntaxToken(SyntaxKind::NUMBER_TOKEN, start, text);
 	}
 
 	if (isspace(this -> get_current_char())) {
@@ -52,22 +52,22 @@ SyntaxToken Lexer::next_token() {
 		int length = (this -> position) - start;
 		std::string text = (this -> text).substr(start, length);
 
-		return SyntaxToken(SyntaxKind::WHITESPACE_TOKEN, start, text);
+		return new SyntaxToken(SyntaxKind::WHITESPACE_TOKEN, start, text);
 	}
 
 	if (this -> get_current_char() == '+') {
-		return SyntaxToken(SyntaxKind::PLUS_TOKEN, (this -> position)++, "+");
+		return new SyntaxToken(SyntaxKind::PLUS_TOKEN, (this -> position)++, "+");
 	} else if (this -> get_current_char() == '-') {
-		return SyntaxToken(SyntaxKind::MINUS_TOKEN, (this -> position)++, "-");
+		return new SyntaxToken(SyntaxKind::MINUS_TOKEN, (this -> position)++, "-");
 	} else if (this -> get_current_char() == '*') {
-		return SyntaxToken(SyntaxKind::STAR_TOKEN, (this -> position)++, "*");
+		return new SyntaxToken(SyntaxKind::STAR_TOKEN, (this -> position)++, "*");
 	} else if (this -> get_current_char() == '/') {
-		return SyntaxToken(SyntaxKind::SLASH_TOKEN, (this -> position)++, "/");
+		return new SyntaxToken(SyntaxKind::SLASH_TOKEN, (this -> position)++, "/");
 	} else if (this -> get_current_char() == '(') {
-		return SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "/");
+		return new SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "/");
 	} else if (this -> get_current_char() == '/') {
-		return SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, "/");
+		return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, "/");
 	}
 
-	return SyntaxToken(SyntaxKind::BAD_TOKEN, (this -> position)++, (this -> text).substr(this -> position - 1, 1));
+	return new SyntaxToken(SyntaxKind::BAD_TOKEN, (this -> position)++, (this -> text).substr(this -> position - 1, 1));
 }

@@ -1,16 +1,38 @@
 #include "SyntaxNode.h"
 
-// ---- I DID THIS MYSELF - CHANGE TO MATCH HIS ---- //
-
-SyntaxKind ExpressionSyntax::get_syntax_kind() {
-	return SyntaxKind::NONE;
+std::string syntax_kind_to_string(SyntaxKind kind) {
+	switch(kind) {
+	case NUMBER_TOKEN:
+		return "NUMBER_TOKEN";
+	case WHITESPACE_TOKEN:
+		return "WHITESPACE_TOKEN";
+	case PLUS_TOKEN:
+		return "PLUS_TOKEN";
+	case MINUS_TOKEN:
+		return "MINUS_TOKEN";
+	case STAR_TOKEN:
+		return "STAR_TOKEN";
+	case SLASH_TOKEN:
+		return "SLASH_TOKEN";
+	case OPEN_PARENTHESIS_TOKEN:
+		return "OPEN_PARENTHESIS_TOKEN";
+	case CLOSE_PARENTHESIS_TOKEN:
+		return "CLOSE_PARENTHESIS_TOKEN";
+	case BAD_TOKEN:
+		return "BAD_TOKEN";
+	case EOF_TOKEN:
+		return "EOF_TOKEN";
+	case NUMBER_EXP:
+		return "NUMBER_EXP";
+	case BINARY_EXP:
+		return "BINARY_EXP";
+	default:
+		return "NONE";
+	}
 }
 
 
-
-
-// ---- ---- ---- ---- ---- ---- ----
-
+// NumberExpressionSyntax
 NumberExpressionSyntax::NumberExpressionSyntax(SyntaxToken _number_token) : number_token(_number_token) {
 	// Nothing to do here
 }
@@ -23,11 +45,16 @@ SyntaxKind NumberExpressionSyntax::get_syntax_kind() {
 	return SyntaxKind::NUMBER_EXP; 
 }
 
-// Binary expressions
-BinaryExpressionSyntax::BinaryExpressionSyntax(ExpressionSyntax* _left, SyntaxToken _operator_node, ExpressionSyntax* _right)
-	: operator_node(_operator_node) {
+std::vector<SyntaxNode*> NumberExpressionSyntax::get_children() {
+	std::vector<SyntaxNode*> result;
+	result.push_back(&(this -> number_token));
+	return result;
+}
+
+// BinaryExpressionSyntax
+BinaryExpressionSyntax::BinaryExpressionSyntax(ExpressionSyntax* _left, SyntaxToken _operator_token, ExpressionSyntax* _right)
+	: operator_token(_operator_token) {
 	this -> left = _left;
-	this -> operator_node = _operator_node;
 	this -> right = _right;
 }
 
@@ -35,8 +62,8 @@ ExpressionSyntax* BinaryExpressionSyntax::get_left() {
 	return this -> left;
 }
 
-SyntaxToken BinaryExpressionSyntax::get_operator_node() {
-	return this -> operator_node;
+SyntaxToken BinaryExpressionSyntax::get_operator_token() {
+	return this -> operator_token;
 }
 
 ExpressionSyntax* BinaryExpressionSyntax::get_right() {
@@ -45,4 +72,14 @@ ExpressionSyntax* BinaryExpressionSyntax::get_right() {
 
 SyntaxKind BinaryExpressionSyntax::get_syntax_kind() {
 	return SyntaxKind::BINARY_EXP;
+}
+
+std::vector<SyntaxNode*> BinaryExpressionSyntax::get_children() {
+	std::vector<SyntaxNode*> result;
+
+	result.push_back(this -> left);
+	result.push_back(&(this -> operator_token));
+	result.push_back(this -> right);
+
+	return result;
 }

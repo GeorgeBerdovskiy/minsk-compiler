@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "SyntaxToken.h"
+#include "SyntaxNode.h"
 
 class Lexer {
 	private:
@@ -15,7 +15,7 @@ class Lexer {
 	public:
 		Lexer(std::string text);
 		
-		SyntaxToken next_token();
+		SyntaxToken* next_token();
 };
 
 
