@@ -6,8 +6,18 @@
 #include "Lexer.h"
 #include "SyntaxNode.h"
 
-void pretty_print(SyntaxNode* node, std::string indent) {
-	std::cout << indent << syntax_kind_to_string(node -> get_syntax_kind());
+void pretty_print(SyntaxNode* node, std::string indent, bool is_last) {
+	// ├──
+
+	// └──
+
+	// │
+
+	std::string marker = is_last ? "└──" : "├──";
+
+	std::cout << indent;
+	std::cout << marker;
+	std::cout << " " << syntax_kind_to_string(node -> get_syntax_kind());
 
 	SyntaxToken* token = dynamic_cast<SyntaxToken*>(node);
  
@@ -17,10 +27,14 @@ void pretty_print(SyntaxNode* node, std::string indent) {
 
 	std::cout << "\n";
 
-	std::string new_indent = indent + " ";
+	std::string new_indent = indent;
+	new_indent += is_last ? "    " : "│   ";
+
+	SyntaxNode* last_child = (node -> get_children().size() == 0) ? NULL : (node -> get_children()).back();
 
 	for(auto child : node -> get_children()) {
-		pretty_print(child, new_indent);
+		//pretty_print(child, new_indent, node == last_child);
+		pretty_print(child, new_indent, child == last_child);
 	}
 }
 
@@ -38,7 +52,7 @@ int main() {
 		Parser parser = Parser(input);
 		ExpressionSyntax* expression = parser.parse();
 
-		pretty_print(expression, "");
+		pretty_print(expression, "", true);
 
 		/*Lexer lexer = Lexer(input);
 		while(true) {
