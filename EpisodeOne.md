@@ -19,5 +19,7 @@ We'll start with a Lexer class to turn code into "words"
 	 - Trees of leaves
 
 
-**Stopped at 39:00**
+We call this a **recursive descent parser**
+
+**Stopped at 1:15**
 

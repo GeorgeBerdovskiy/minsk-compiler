@@ -19,7 +19,8 @@ enum SyntaxKind {
 	EOF_TOKEN,
 
 	NUMBER_EXP,
-	BINARY_EXP
+	BINARY_EXP,
+	PARENTHESIZED_EXP
 };
 
 std::string syntax_kind_to_string(SyntaxKind kind);
@@ -86,6 +87,20 @@ class BinaryExpressionSyntax final : virtual public ExpressionSyntax {
 		ExpressionSyntax* get_right();
 
 		// Virtual class member overrides
+		SyntaxKind get_syntax_kind() override;
+		std::vector<SyntaxNode*> get_children() override;
+};
+
+class ParenthesizedExpressionSyntax final : virtual public ExpressionSyntax {
+	private:
+		SyntaxToken open_parenthesis_token;
+		ExpressionSyntax* expression;
+		SyntaxToken close_parenthesis_token;
+	public:
+		ParenthesizedExpressionSyntax(SyntaxToken, ExpressionSyntax*, SyntaxToken);
+		
+		ExpressionSyntax* get_expression();
+
 		SyntaxKind get_syntax_kind() override;
 		std::vector<SyntaxNode*> get_children() override;
 };

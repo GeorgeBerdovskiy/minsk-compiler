@@ -63,18 +63,42 @@ SyntaxToken Parser::match(SyntaxKind kind) {
 }
 
 SyntaxTree Parser::parse() {
-	ExpressionSyntax* expression = this -> parse_expression();
+	ExpressionSyntax* expression = this -> parse_term();
 
 	SyntaxToken eof_token = this -> match(SyntaxKind::EOF_TOKEN);
 	return SyntaxTree(this -> diagnostics, expression, eof_token);
 }
 
 ExpressionSyntax* Parser::parse_expression() {
-	ExpressionSyntax* left = this -> parse_primary_expression();
-	ExpressionSyntax* result = NULL;
+	return this -> parse_term();
+}
+
+ExpressionSyntax* Parser::parse_term() {
+	ExpressionSyntax* left = this -> parse_factor();
+	ExpressionSyntax* result = left;
 
 	while ( this -> current() -> get_syntax_kind() == SyntaxKind::PLUS_TOKEN ||
 		this -> current() -> get_syntax_kind() == SyntaxKind::MINUS_TOKEN) {
+		SyntaxToken operator_token = *(this -> next_token());
+		ExpressionSyntax* right = this -> parse_factor();
+		
+		if (left == NULL) {
+			result = new BinaryExpressionSyntax(result, operator_token, right);
+		} else {
+			result = new BinaryExpressionSyntax(left, operator_token, right);
+			left = NULL;
+		}
+	}
+
+	return result;
+}
+
+ExpressionSyntax* Parser::parse_factor() {
+	ExpressionSyntax* left = this -> parse_primary_expression();
+	ExpressionSyntax* result = left;
+
+	while ( this -> current() -> get_syntax_kind() == SyntaxKind::STAR_TOKEN ||
+		this -> current() -> get_syntax_kind() == SyntaxKind::SLASH_TOKEN) {
 		SyntaxToken operator_token = *(this -> next_token());
 		ExpressionSyntax* right = this -> parse_primary_expression();
 		
@@ -90,6 +114,14 @@ ExpressionSyntax* Parser::parse_expression() {
 }
 
 ExpressionSyntax* Parser::parse_primary_expression() {
+	if (this -> current() -> get_syntax_kind() == SyntaxKind::OPEN_PARENTHESIS_TOKEN) {
+		SyntaxToken left = *(this -> next_token());
+		ExpressionSyntax* expression = this -> parse_expression();
+		SyntaxToken right = this -> match(SyntaxKind::CLOSE_PARENTHESIS_TOKEN);
+
+		return new ParenthesizedExpressionSyntax(left, expression, right);
+	}
+
 	SyntaxToken number_token = this -> match(SyntaxKind::NUMBER_TOKEN);
 	return new NumberExpressionSyntax(number_token);
 }

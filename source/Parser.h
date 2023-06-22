@@ -7,6 +7,8 @@
 #include <vector>
 #include <sstream>
 
+class SyntaxTree;
+
 class Parser {
 	private:
 		std::vector<SyntaxToken> tokens; // Maybe not super efficient...
@@ -15,6 +17,8 @@ class Parser {
 		SyntaxToken* peek(int offset);
 		SyntaxToken* current();
 
+		ExpressionSyntax* parse_expression();
+
 		SyntaxToken* next_token();
 		std::vector<std::string> diagnostics;
 	public:
@@ -22,7 +26,8 @@ class Parser {
 
 		SyntaxToken match(SyntaxKind);
 		SyntaxTree parse();
-		ExpressionSyntax* parse_expression();
+		ExpressionSyntax* parse_term();
+		ExpressionSyntax* parse_factor();
 		ExpressionSyntax* parse_primary_expression();
 
 		std::vector<std::string> get_diagnostics();

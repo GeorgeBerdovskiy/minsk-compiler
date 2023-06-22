@@ -5,6 +5,7 @@
 #include <string>
 
 #include "SyntaxNode.h"
+#include "Parser.h"
 
 // Note - should be final ("sealed")
 class SyntaxTree {
@@ -18,6 +19,8 @@ class SyntaxTree {
 		ExpressionSyntax* get_root();
 		SyntaxToken get_eof_token();
 		std::vector<std::string> get_diagnostics();
+
+		static SyntaxTree parse(std::string);
 };
 
 #endif // _SYNTAX_TREE_H_

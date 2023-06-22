@@ -43,6 +43,16 @@ SyntaxToken* Lexer::next_token() {
 		int length = (this -> position) - start;
 		std::string text = (this -> text).substr(start, length);
 
+		// Check to make sure number is valid i32
+		try {
+			// What if 'text' contains a float?
+			int _ = std::stoi(text);
+		} catch(...) {
+			std::ostringstream message;
+        		message << "ERROR - The number [" << text << "] isn't a valid integer";
+			this -> diagnostics.push_back(message.str());
+		}
+
 		return new SyntaxToken(SyntaxKind::NUMBER_TOKEN, start, text);
 	}
 
@@ -68,9 +78,9 @@ SyntaxToken* Lexer::next_token() {
 	} else if (this -> get_current_char() == '/') {
 		return new SyntaxToken(SyntaxKind::SLASH_TOKEN, (this -> position)++, "/");
 	} else if (this -> get_current_char() == '(') {
-		return new SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "/");
-	} else if (this -> get_current_char() == '/') {
-		return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, "/");
+		return new SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "(");
+	} else if (this -> get_current_char() == ')') {
+		return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, ")");
 	}
 
 	std::ostringstream message;

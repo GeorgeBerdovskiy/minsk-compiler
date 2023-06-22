@@ -26,6 +26,8 @@ std::string syntax_kind_to_string(SyntaxKind kind) {
 		return "NUMBER_EXP";
 	case BINARY_EXP:
 		return "BINARY_EXP";
+	case PARENTHESIZED_EXP:
+		return "PARENTHESIZED_EXP";
 	default:
 		return "NONE";
 	}
@@ -80,6 +82,28 @@ std::vector<SyntaxNode*> BinaryExpressionSyntax::get_children() {
 	result.push_back(this -> left);
 	result.push_back(&(this -> operator_token));
 	result.push_back(this -> right);
+
+	return result;
+}
+
+ParenthesizedExpressionSyntax::ParenthesizedExpressionSyntax(SyntaxToken _open_parenthesis_token, ExpressionSyntax* _expression, SyntaxToken _close_parenthesis_token) : open_parenthesis_token(_open_parenthesis_token), close_parenthesis_token(_close_parenthesis_token) {
+	this -> expression = _expression;
+}
+
+ExpressionSyntax* ParenthesizedExpressionSyntax::get_expression() {
+	return this -> expression;
+}
+
+SyntaxKind ParenthesizedExpressionSyntax::get_syntax_kind() {
+	return SyntaxKind::PARENTHESIZED_EXP;
+}
+
+std::vector<SyntaxNode*> ParenthesizedExpressionSyntax::get_children() {
+	std::vector<SyntaxNode*> result;
+
+	result.push_back(&(this -> open_parenthesis_token));
+	result.push_back(this -> expression);
+	result.push_back(&(this -> close_parenthesis_token));
 
 	return result;
 }

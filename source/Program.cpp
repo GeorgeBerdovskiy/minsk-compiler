@@ -2,6 +2,7 @@
 #include <cctype>
 #include <string>
 
+#include "Evaluator.h"
 #include "Parser.h"
 #include "Lexer.h"
 #include "SyntaxNode.h"
@@ -45,19 +46,32 @@ int main() {
 	// Welcome message
 	std::cout << "Welcome to the Minsk interpreter! Enter 'E' to exit." << std::endl;
 
+	bool show_tree = false;
+	
 	while (true) {
 		std::cout << "> ";
 		std::getline(std::cin, input);
 
-		Parser parser = Parser(input);
-		SyntaxTree syntax_tree = parser.parse();
+		if (input == "#showTree") {
+			show_tree = !show_tree;
+			std::cout << (show_tree ? "Showing parse trees." : "Not showing parse trees.") << std::endl;
+			continue;
+		}
+		
+		SyntaxTree syntax_tree = SyntaxTree::parse(input);
 
-		pretty_print(syntax_tree.get_root(), "", true);
+		if (show_tree) {
+			pretty_print(syntax_tree.get_root(), "", true);
+		}
 
 		if (syntax_tree.get_diagnostics().size() > 0) {
 			for (auto diagnostic: syntax_tree.get_diagnostics()) {
 				std::cout << diagnostic << std::endl;
 			}
+		} else {
+			Evaluator e = Evaluator(syntax_tree.get_root());
+			int result = e.evaluate();
+			std::cout << result << std::endl;
 		}
 	}
 }
