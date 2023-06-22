@@ -50,27 +50,14 @@ int main() {
 		std::getline(std::cin, input);
 
 		Parser parser = Parser(input);
-		ExpressionSyntax* expression = parser.parse();
+		SyntaxTree syntax_tree = parser.parse();
 
-		pretty_print(expression, "", true);
+		pretty_print(syntax_tree.get_root(), "", true);
 
-		/*Lexer lexer = Lexer(input);
-		while(true) {
-			SyntaxToken token = lexer.next_token();
-			
-			if (token.get_syntax_kind() == SyntaxKind::EOF_TOKEN) {
-				break;
+		if (syntax_tree.get_diagnostics().size() > 0) {
+			for (auto diagnostic: syntax_tree.get_diagnostics()) {
+				std::cout << diagnostic << std::endl;
 			}
-			
-			std::cout << token.get_syntax_kind() << ":" << token.get_text() << std::endl;
 		}
-
-		// Exit when user enters 'E'
-		if (input == "E") return 0;
-
-		// Check their input otherwise
-		if (input == "1 + 2 * 3") {
-			std::cout << "7" << std::endl;
-		}*/
 	}
 }

@@ -19,6 +19,11 @@ Parser::Parser(std::string text) {
 	} while(token -> get_syntax_kind() != SyntaxKind::EOF_TOKEN);
 
 	this -> tokens = _tokens;
+	
+	// Add diagnostics from lexer to parser
+	for (auto message : lexer.get_diagnostics()) {
+		this -> diagnostics.push_back(message);
+	}
 }
 
 // Return pointer because we only want to see it - address is enough
@@ -43,11 +48,28 @@ SyntaxToken* Parser::next_token() {
 SyntaxToken Parser::match(SyntaxKind kind) {
 	if (this -> current() -> get_syntax_kind() == kind) return *(this -> next_token());
 
+	// Add error to diagnostics
+	std::ostringstream message;
+        message << "ERROR - Found token '"
+		<< syntax_kind_to_string(this -> current() -> get_syntax_kind())
+		<< "' but expected '"
+		<< syntax_kind_to_string(kind)
+		<< "'";
+
+        this -> diagnostics.push_back(message.str());
+
 	// Otherwise...
 	return SyntaxToken(kind, this -> current() -> get_position(), "");
 }
 
-ExpressionSyntax* Parser::parse() {
+SyntaxTree Parser::parse() {
+	ExpressionSyntax* expression = this -> parse_expression();
+
+	SyntaxToken eof_token = this -> match(SyntaxKind::EOF_TOKEN);
+	return SyntaxTree(this -> diagnostics, expression, eof_token);
+}
+
+ExpressionSyntax* Parser::parse_expression() {
 	ExpressionSyntax* left = this -> parse_primary_expression();
 	ExpressionSyntax* result = NULL;
 
@@ -70,4 +92,8 @@ ExpressionSyntax* Parser::parse() {
 ExpressionSyntax* Parser::parse_primary_expression() {
 	SyntaxToken number_token = this -> match(SyntaxKind::NUMBER_TOKEN);
 	return new NumberExpressionSyntax(number_token);
+}
+
+std::vector<std::string> Parser::get_diagnostics() {
+        return this -> diagnostics;
 }

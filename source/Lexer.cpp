@@ -17,6 +17,10 @@ void Lexer::next() {
 	this -> position += 1;
 }
 
+std::vector<std::string> Lexer::get_diagnostics() {
+	return this -> diagnostics;
+}
+
 SyntaxToken* Lexer::next_token() {
 	/*
 	 * <numbers>
@@ -68,6 +72,11 @@ SyntaxToken* Lexer::next_token() {
 	} else if (this -> get_current_char() == '/') {
 		return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, "/");
 	}
+
+	std::ostringstream message;
+	message << "ERROR - Bad character in input - '" << this -> get_current_char() << "'";
+
+	this -> diagnostics.push_back(message.str());
 
 	return new SyntaxToken(SyntaxKind::BAD_TOKEN, (this -> position)++, (this -> text).substr(this -> position - 1, 1));
 }

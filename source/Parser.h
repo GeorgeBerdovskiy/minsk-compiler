@@ -2,7 +2,10 @@
 #define _PARSER_H_
 
 #include "SyntaxNode.h"
+#include "SyntaxTree.h"
+
 #include <vector>
+#include <sstream>
 
 class Parser {
 	private:
@@ -13,12 +16,16 @@ class Parser {
 		SyntaxToken* current();
 
 		SyntaxToken* next_token();
+		std::vector<std::string> diagnostics;
 	public:
 		Parser(std::string text);
 
 		SyntaxToken match(SyntaxKind);
-		ExpressionSyntax* parse();
+		SyntaxTree parse();
+		ExpressionSyntax* parse_expression();
 		ExpressionSyntax* parse_primary_expression();
+
+		std::vector<std::string> get_diagnostics();
 };
 
 #endif // _PARSER_H_
