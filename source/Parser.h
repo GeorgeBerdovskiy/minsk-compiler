@@ -24,8 +24,9 @@ class Parser {
 	public:
 		Parser(std::string text);
 
-		SyntaxToken match(SyntaxKind);
+		SyntaxToken match_token(SyntaxKind);
 		SyntaxTree parse();
+
 		ExpressionSyntax* parse_term();
 		ExpressionSyntax* parse_factor();
 		ExpressionSyntax* parse_primary_expression();

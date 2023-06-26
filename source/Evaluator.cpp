@@ -12,8 +12,8 @@ int Evaluator::evaluate_expression(ExpressionSyntax* node) {
 	// BinaryExpression
 	// NumberExpression
 	
-	if (NumberExpressionSyntax* num_exp = dynamic_cast<NumberExpressionSyntax*>(node)) {
-		std::string text = num_exp -> get_number_token().get_text();
+	if (LiteralExpressionSyntax* num_exp = dynamic_cast<LiteralExpressionSyntax*>(node)) {
+		std::string text = num_exp -> get_literal_token().get_text();
 		return std::stoi(text);
 
 		// In the video he just returns n.NumberToken.Value but we can't do that here because I don't store the value

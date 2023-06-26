@@ -7,17 +7,19 @@
 enum SyntaxKind {
 	NONE,
 
-	NUMBER_TOKEN,
+	// Tokens
+	BAD_TOKEN,
+	EOF_TOKEN,
 	WHITESPACE_TOKEN,
+	NUMBER_TOKEN,
 	PLUS_TOKEN,
 	MINUS_TOKEN,
 	STAR_TOKEN,
 	SLASH_TOKEN,
 	OPEN_PARENTHESIS_TOKEN,
 	CLOSE_PARENTHESIS_TOKEN,
-	BAD_TOKEN,
-	EOF_TOKEN,
 
+	// Expressions
 	NUMBER_EXP,
 	BINARY_EXP,
 	PARENTHESIZED_EXP
@@ -56,16 +58,16 @@ class ExpressionSyntax : public virtual SyntaxNode {
 	// Nothing needed here
 };
 
-class NumberExpressionSyntax final : public virtual ExpressionSyntax {
+class LiteralExpressionSyntax final : public virtual ExpressionSyntax {
 	private:
-		SyntaxToken number_token;
+		SyntaxToken literal_token;
 
 	public:
 		// Constructor
-		NumberExpressionSyntax(SyntaxToken _number_token);
+		LiteralExpressionSyntax(SyntaxToken _literal_token);
 
 		// Getters
-		SyntaxToken get_number_token();
+		SyntaxToken get_literal_token();
 
 		// Virtual class member overrides
 		SyntaxKind get_syntax_kind() override;

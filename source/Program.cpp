@@ -29,7 +29,7 @@ void pretty_print(SyntaxNode* node, std::string indent, bool is_last) {
 	std::cout << "\n";
 
 	std::string new_indent = indent;
-	new_indent += is_last ? "    " : "│   ";
+	new_indent += is_last ? "   " : "│   ";
 
 	SyntaxNode* last_child = (node -> get_children().size() == 0) ? NULL : (node -> get_children()).back();
 

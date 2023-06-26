@@ -21,14 +21,7 @@ std::vector<std::string> Lexer::get_diagnostics() {
 	return this -> diagnostics;
 }
 
-SyntaxToken* Lexer::next_token() {
-	/*
-	 * <numbers>
-	 * + - * / ()
-	 * <whitespace>
-	 *
-	 */
-
+SyntaxToken* Lexer::lex() {
 	if (this -> position >= (this -> text).size()) {
 		return new SyntaxToken(SyntaxKind::EOF_TOKEN, this -> position, "\0");
 	}
@@ -68,19 +61,20 @@ SyntaxToken* Lexer::next_token() {
 
 		return new SyntaxToken(SyntaxKind::WHITESPACE_TOKEN, start, text);
 	}
-
-	if (this -> get_current_char() == '+') {
-		return new SyntaxToken(SyntaxKind::PLUS_TOKEN, (this -> position)++, "+");
-	} else if (this -> get_current_char() == '-') {
-		return new SyntaxToken(SyntaxKind::MINUS_TOKEN, (this -> position)++, "-");
-	} else if (this -> get_current_char() == '*') {
-		return new SyntaxToken(SyntaxKind::STAR_TOKEN, (this -> position)++, "*");
-	} else if (this -> get_current_char() == '/') {
-		return new SyntaxToken(SyntaxKind::SLASH_TOKEN, (this -> position)++, "/");
-	} else if (this -> get_current_char() == '(') {
-		return new SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "(");
-	} else if (this -> get_current_char() == ')') {
-		return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, ")");
+	
+	switch(this -> get_current_char()) {
+		case '+':
+			return new SyntaxToken(SyntaxKind::PLUS_TOKEN, (this -> position)++, "+");
+		case '-':
+			return new SyntaxToken(SyntaxKind::MINUS_TOKEN, (this -> position)++, "-");
+		case '*':
+			return new SyntaxToken(SyntaxKind::STAR_TOKEN, (this -> position)++, "*");
+		case '/':
+			return new SyntaxToken(SyntaxKind::SLASH_TOKEN, (this -> position)++, "/");
+		case '(':
+			return new SyntaxToken(SyntaxKind::OPEN_PARENTHESIS_TOKEN, (this -> position)++, "(");
+		case ')':
+			return new SyntaxToken(SyntaxKind::CLOSE_PARENTHESIS_TOKEN, (this -> position)++, ")");
 	}
 
 	std::ostringstream message;

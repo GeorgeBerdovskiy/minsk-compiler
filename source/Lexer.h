@@ -19,7 +19,7 @@ class Lexer {
 	public:
 		Lexer(std::string text);
 		
-		SyntaxToken* next_token();
+		SyntaxToken* lex();
 		std::vector<std::string> get_diagnostics();
 };
 

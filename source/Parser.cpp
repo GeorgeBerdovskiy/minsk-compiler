@@ -10,7 +10,7 @@ Parser::Parser(std::string text) {
 	SyntaxToken* token;
 
 	do {
-		token = lexer.next_token();
+		token = lexer.lex();
 
 		if (token -> get_syntax_kind() != SyntaxKind::WHITESPACE_TOKEN &&
 			token -> get_syntax_kind() != SyntaxKind::BAD_TOKEN) {
@@ -45,7 +45,7 @@ SyntaxToken* Parser::next_token() {
 	return current;
 }
 
-SyntaxToken Parser::match(SyntaxKind kind) {
+SyntaxToken Parser::match_token(SyntaxKind kind) {
 	if (this -> current() -> get_syntax_kind() == kind) return *(this -> next_token());
 
 	// Add error to diagnostics
@@ -63,9 +63,9 @@ SyntaxToken Parser::match(SyntaxKind kind) {
 }
 
 SyntaxTree Parser::parse() {
-	ExpressionSyntax* expression = this -> parse_term();
+	ExpressionSyntax* expression = this -> parse_expression();
 
-	SyntaxToken eof_token = this -> match(SyntaxKind::EOF_TOKEN);
+	SyntaxToken eof_token = this -> match_token(SyntaxKind::EOF_TOKEN);
 	return SyntaxTree(this -> diagnostics, expression, eof_token);
 }
 
@@ -117,13 +117,13 @@ ExpressionSyntax* Parser::parse_primary_expression() {
 	if (this -> current() -> get_syntax_kind() == SyntaxKind::OPEN_PARENTHESIS_TOKEN) {
 		SyntaxToken left = *(this -> next_token());
 		ExpressionSyntax* expression = this -> parse_expression();
-		SyntaxToken right = this -> match(SyntaxKind::CLOSE_PARENTHESIS_TOKEN);
+		SyntaxToken right = this -> match_token(SyntaxKind::CLOSE_PARENTHESIS_TOKEN);
 
 		return new ParenthesizedExpressionSyntax(left, expression, right);
 	}
 
-	SyntaxToken number_token = this -> match(SyntaxKind::NUMBER_TOKEN);
-	return new NumberExpressionSyntax(number_token);
+	SyntaxToken number_token = this -> match_token(SyntaxKind::NUMBER_TOKEN);
+	return new LiteralExpressionSyntax(number_token);
 }
 
 std::vector<std::string> Parser::get_diagnostics() {

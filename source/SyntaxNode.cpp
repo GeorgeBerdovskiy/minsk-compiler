@@ -34,22 +34,22 @@ std::string syntax_kind_to_string(SyntaxKind kind) {
 }
 
 
-// NumberExpressionSyntax
-NumberExpressionSyntax::NumberExpressionSyntax(SyntaxToken _number_token) : number_token(_number_token) {
+// LiteralExpressionSyntax
+LiteralExpressionSyntax::LiteralExpressionSyntax(SyntaxToken _literal_token) : literal_token(_literal_token) {
 	// Nothing to do here
 }
 
-SyntaxToken NumberExpressionSyntax::get_number_token() {
-	return this -> number_token;
+SyntaxToken LiteralExpressionSyntax::get_literal_token() {
+	return this -> literal_token;
 }
 
-SyntaxKind NumberExpressionSyntax::get_syntax_kind() {
+SyntaxKind LiteralExpressionSyntax::get_syntax_kind() {
 	return SyntaxKind::NUMBER_EXP; 
 }
 
-std::vector<SyntaxNode*> NumberExpressionSyntax::get_children() {
+std::vector<SyntaxNode*> LiteralExpressionSyntax::get_children() {
 	std::vector<SyntaxNode*> result;
-	result.push_back(&(this -> number_token));
+	result.push_back(&(this -> literal_token));
 	return result;
 }
 
