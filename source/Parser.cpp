@@ -12,11 +12,11 @@ Parser::Parser(std::string text) {
 	do {
 		token = lexer.lex();
 
-		if (token -> get_syntax_kind() != SyntaxKind::WHITESPACE_TOKEN &&
-			token -> get_syntax_kind() != SyntaxKind::BAD_TOKEN) {
+		if (token -> get_kind() != SyntaxKind::WHITESPACE_TOKEN &&
+			token -> get_kind() != SyntaxKind::BAD_TOKEN) {
 			_tokens.push_back(*token);
 		}
-	} while(token -> get_syntax_kind() != SyntaxKind::EOF_TOKEN);
+	} while(token -> get_kind() != SyntaxKind::EOF_TOKEN);
 
 	this -> tokens = _tokens;
 	
@@ -46,12 +46,12 @@ SyntaxToken* Parser::next_token() {
 }
 
 SyntaxToken Parser::match_token(SyntaxKind kind) {
-	if (this -> current() -> get_syntax_kind() == kind) return *(this -> next_token());
+	if (this -> current() -> get_kind() == kind) return *(this -> next_token());
 
 	// Add error to diagnostics
 	std::ostringstream message;
         message << "ERROR - Found token '"
-		<< syntax_kind_to_string(this -> current() -> get_syntax_kind())
+		<< syntax_kind_to_string(this -> current() -> get_kind())
 		<< "' but expected '"
 		<< syntax_kind_to_string(kind)
 		<< "'";
@@ -69,52 +69,34 @@ SyntaxTree Parser::parse() {
 	return SyntaxTree(this -> diagnostics, expression, eof_token);
 }
 
-ExpressionSyntax* Parser::parse_expression() {
-	return this -> parse_term();
-}
+ExpressionSyntax* Parser::parse_expression(int parent_precedence) {
+	// Called with 'parent_precedence' = 0 as default
+	ExpressionSyntax* left;
+	int unary_operator_precedence = SyntaxFacts::get_unary_operator_precedence(this -> current() -> get_kind());
 
-ExpressionSyntax* Parser::parse_term() {
-	ExpressionSyntax* left = this -> parse_factor();
-	ExpressionSyntax* result = left;
-
-	while ( this -> current() -> get_syntax_kind() == SyntaxKind::PLUS_TOKEN ||
-		this -> current() -> get_syntax_kind() == SyntaxKind::MINUS_TOKEN) {
+	if (unary_operator_precedence != 0 && unary_operator_precedence >= parent_precedence) {
 		SyntaxToken operator_token = *(this -> next_token());
-		ExpressionSyntax* right = this -> parse_factor();
-		
-		if (left == NULL) {
-			result = new BinaryExpressionSyntax(result, operator_token, right);
-		} else {
-			result = new BinaryExpressionSyntax(left, operator_token, right);
-			left = NULL;
-		}
+		ExpressionSyntax* operand = this -> parse_expression(unary_operator_precedence);
+		left = new UnaryExpressionSyntax(operator_token, operand);
+	} else {
+		left = this -> parse_primary_expression();
 	}
 
-	return result;
-}
+	while(true) {
+		int precedence = SyntaxFacts::get_binary_operator_precedence(this -> current() -> get_kind());
+		if (precedence == 0 || precedence <= parent_precedence) break;
 
-ExpressionSyntax* Parser::parse_factor() {
-	ExpressionSyntax* left = this -> parse_primary_expression();
-	ExpressionSyntax* result = left;
-
-	while ( this -> current() -> get_syntax_kind() == SyntaxKind::STAR_TOKEN ||
-		this -> current() -> get_syntax_kind() == SyntaxKind::SLASH_TOKEN) {
+		// Otherwise...
 		SyntaxToken operator_token = *(this -> next_token());
-		ExpressionSyntax* right = this -> parse_primary_expression();
-		
-		if (left == NULL) {
-			result = new BinaryExpressionSyntax(result, operator_token, right);
-		} else {
-			result = new BinaryExpressionSyntax(left, operator_token, right);
-			left = NULL;
-		}
+		ExpressionSyntax* right = parse_expression(precedence);
+		left = new BinaryExpressionSyntax(left, operator_token, right);
 	}
 
-	return result;
+	return left;
 }
 
 ExpressionSyntax* Parser::parse_primary_expression() {
-	if (this -> current() -> get_syntax_kind() == SyntaxKind::OPEN_PARENTHESIS_TOKEN) {
+	if (this -> current() -> get_kind() == SyntaxKind::OPEN_PARENTHESIS_TOKEN) {
 		SyntaxToken left = *(this -> next_token());
 		ExpressionSyntax* expression = this -> parse_expression();
 		SyntaxToken right = this -> match_token(SyntaxKind::CLOSE_PARENTHESIS_TOKEN);

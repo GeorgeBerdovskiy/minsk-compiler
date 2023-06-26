@@ -18,7 +18,7 @@ void pretty_print(SyntaxNode* node, std::string indent, bool is_last) {
 
 	std::cout << indent;
 	std::cout << marker;
-	std::cout << " " << syntax_kind_to_string(node -> get_syntax_kind());
+	std::cout << " " << syntax_kind_to_string(node -> get_kind());
 
 	SyntaxToken* token = dynamic_cast<SyntaxToken*>(node);
  

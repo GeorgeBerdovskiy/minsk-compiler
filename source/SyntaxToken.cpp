@@ -6,7 +6,7 @@ SyntaxToken::SyntaxToken(SyntaxKind _kind, int _position, std::string _text) {
 	this -> text = _text;
 }
 
-SyntaxKind SyntaxToken::get_syntax_kind() {
+SyntaxKind SyntaxToken::get_kind() {
 	return this -> kind;
 }
 

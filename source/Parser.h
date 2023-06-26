@@ -3,6 +3,7 @@
 
 #include "SyntaxNode.h"
 #include "SyntaxTree.h"
+#include "SyntaxFacts.h"
 
 #include <vector>
 #include <sstream>
@@ -17,7 +18,7 @@ class Parser {
 		SyntaxToken* peek(int offset);
 		SyntaxToken* current();
 
-		ExpressionSyntax* parse_expression();
+		ExpressionSyntax* parse_expression(int parent_precedence = 0);
 
 		SyntaxToken* next_token();
 		std::vector<std::string> diagnostics;

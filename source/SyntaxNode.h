@@ -20,7 +20,8 @@ enum SyntaxKind {
 	CLOSE_PARENTHESIS_TOKEN,
 
 	// Expressions
-	NUMBER_EXP,
+	LITERAL_EXP,
+	UNARY_EXP,
 	BINARY_EXP,
 	PARENTHESIZED_EXP
 };
@@ -33,7 +34,7 @@ class SyntaxNode {
 		SyntaxKind kind;
 	public:
 		virtual std::vector<SyntaxNode*> get_children() = 0;
-		virtual SyntaxKind get_syntax_kind() = 0;
+		virtual SyntaxKind get_kind() = 0;
 };
 
 class SyntaxToken : public virtual SyntaxNode {
@@ -50,7 +51,7 @@ class SyntaxToken : public virtual SyntaxNode {
 		std::string get_text();
 
 		// Virtual class member overrides
-		SyntaxKind get_syntax_kind() override;
+		SyntaxKind get_kind() override;
 		std::vector<SyntaxNode*> get_children() override;
 };
 
@@ -70,7 +71,7 @@ class LiteralExpressionSyntax final : public virtual ExpressionSyntax {
 		SyntaxToken get_literal_token();
 
 		// Virtual class member overrides
-		SyntaxKind get_syntax_kind() override;
+		SyntaxKind get_kind() override;
 		std::vector<SyntaxNode*> get_children() override;
 };
 
@@ -89,7 +90,24 @@ class BinaryExpressionSyntax final : virtual public ExpressionSyntax {
 		ExpressionSyntax* get_right();
 
 		// Virtual class member overrides
-		SyntaxKind get_syntax_kind() override;
+		SyntaxKind get_kind() override;
+		std::vector<SyntaxNode*> get_children() override;
+};
+
+class UnaryExpressionSyntax final : virtual public ExpressionSyntax {
+	private:
+		SyntaxToken operator_token;
+		ExpressionSyntax* operand;
+	public:
+		// Constructors
+		UnaryExpressionSyntax(SyntaxToken, ExpressionSyntax*);
+
+		// Getters
+		SyntaxToken get_operator_token();
+		ExpressionSyntax* get_operand();
+
+		// Virtual class member overrides
+		SyntaxKind get_kind() override;
 		std::vector<SyntaxNode*> get_children() override;
 };
 
@@ -103,7 +121,7 @@ class ParenthesizedExpressionSyntax final : virtual public ExpressionSyntax {
 		
 		ExpressionSyntax* get_expression();
 
-		SyntaxKind get_syntax_kind() override;
+		SyntaxKind get_kind() override;
 		std::vector<SyntaxNode*> get_children() override;
 };
 

@@ -20,21 +20,39 @@ int Evaluator::evaluate_expression(ExpressionSyntax* node) {
 		// I could maybe do that with a void pointer or different value types for different tokens but at this point using text just seems easier
 	}
 
+	if (UnaryExpressionSyntax* un_exp = dynamic_cast<UnaryExpressionSyntax*>(node)) {
+		int operand = this -> evaluate_expression(un_exp -> get_operand());
+
+		// This may be nicer as a switch statement
+		if (un_exp -> get_operator_token().get_kind() == PLUS_TOKEN) {
+			return operand;
+		} else if (un_exp -> get_operator_token().get_kind() == MINUS_TOKEN) {
+			return -operand;
+		} else {
+			// Don't know what it is. TODO - Throw exception
+			std::cerr << "ERROR - Unexpected unary expression '"
+					  << syntax_kind_to_string(un_exp -> get_operator_token().get_kind())
+					  << "'"
+					  << std::endl;
+			exit(1);
+		}
+	}
+
 	if (BinaryExpressionSyntax* bin_exp = dynamic_cast<BinaryExpressionSyntax*>(node)) {
 		int left = this -> evaluate_expression(bin_exp -> get_left());
 		int right = this -> evaluate_expression(bin_exp -> get_right());
 
-		if (bin_exp -> get_operator_token().get_syntax_kind() == PLUS_TOKEN) {
+		if (bin_exp -> get_operator_token().get_kind() == PLUS_TOKEN) {
 			return left + right;
-		} else if (bin_exp -> get_operator_token().get_syntax_kind() == MINUS_TOKEN) {
+		} else if (bin_exp -> get_operator_token().get_kind() == MINUS_TOKEN) {
 			return left - right;
-		} else if (bin_exp -> get_operator_token().get_syntax_kind() == STAR_TOKEN) {
+		} else if (bin_exp -> get_operator_token().get_kind() == STAR_TOKEN) {
 			return left * right;
-		} else if (bin_exp -> get_operator_token().get_syntax_kind() == SLASH_TOKEN) {
+		} else if (bin_exp -> get_operator_token().get_kind() == SLASH_TOKEN) {
 			return left / right;
 		} else {
 			// TODO - Throw exception instead
-			std::cout << "(Should throw exception) Unexpected binary operator '" << bin_exp -> get_operator_token().get_syntax_kind() << "'" << std::endl;
+			std::cout << "(Should throw exception) Unexpected binary operator '" << bin_exp -> get_operator_token().get_kind() << "'" << std::endl;
 			exit(1);
 		}
 	}
@@ -44,6 +62,6 @@ int Evaluator::evaluate_expression(ExpressionSyntax* node) {
 	}
 
 	// TODO - Throw exception here as well
-	std::cerr << "Unexpected node '" << node -> get_syntax_kind() << "'" << std::endl;
+	std::cerr << "Unexpected node '" << node -> get_kind() << "'" << std::endl;
 	exit(1);
 }

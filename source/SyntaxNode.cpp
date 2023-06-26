@@ -22,8 +22,10 @@ std::string syntax_kind_to_string(SyntaxKind kind) {
 		return "BAD_TOKEN";
 	case EOF_TOKEN:
 		return "EOF_TOKEN";
-	case NUMBER_EXP:
-		return "NUMBER_EXP";
+	case LITERAL_EXP:
+		return "LITERAL_EXP";
+	case UNARY_EXP:
+		return "UNARY_EXP";
 	case BINARY_EXP:
 		return "BINARY_EXP";
 	case PARENTHESIZED_EXP:
@@ -43,8 +45,8 @@ SyntaxToken LiteralExpressionSyntax::get_literal_token() {
 	return this -> literal_token;
 }
 
-SyntaxKind LiteralExpressionSyntax::get_syntax_kind() {
-	return SyntaxKind::NUMBER_EXP; 
+SyntaxKind LiteralExpressionSyntax::get_kind() {
+	return SyntaxKind::LITERAL_EXP; 
 }
 
 std::vector<SyntaxNode*> LiteralExpressionSyntax::get_children() {
@@ -72,7 +74,7 @@ ExpressionSyntax* BinaryExpressionSyntax::get_right() {
 	return this -> right;
 }
 
-SyntaxKind BinaryExpressionSyntax::get_syntax_kind() {
+SyntaxKind BinaryExpressionSyntax::get_kind() {
 	return SyntaxKind::BINARY_EXP;
 }
 
@@ -86,6 +88,34 @@ std::vector<SyntaxNode*> BinaryExpressionSyntax::get_children() {
 	return result;
 }
 
+// UnaryExpressionSyntax
+UnaryExpressionSyntax::UnaryExpressionSyntax(SyntaxToken _operator_token, ExpressionSyntax* _operand)
+	: operator_token(_operator_token) {
+	this -> operand = _operand;
+}
+
+SyntaxToken UnaryExpressionSyntax::get_operator_token() {
+	return this -> operator_token;
+}
+
+ExpressionSyntax* UnaryExpressionSyntax::get_operand() {
+	return this -> operand;
+}
+
+SyntaxKind UnaryExpressionSyntax::get_kind() {
+	return UNARY_EXP;
+}
+
+std::vector<SyntaxNode*> UnaryExpressionSyntax::get_children() {
+	std::vector<SyntaxNode*> result;
+
+	result.push_back(&(this -> operator_token));
+	result.push_back(this -> operand);
+
+	return result;
+}
+
+// ParenthesizedExpressionSyntax
 ParenthesizedExpressionSyntax::ParenthesizedExpressionSyntax(SyntaxToken _open_parenthesis_token, ExpressionSyntax* _expression, SyntaxToken _close_parenthesis_token) : open_parenthesis_token(_open_parenthesis_token), close_parenthesis_token(_close_parenthesis_token) {
 	this -> expression = _expression;
 }
@@ -94,7 +124,7 @@ ExpressionSyntax* ParenthesizedExpressionSyntax::get_expression() {
 	return this -> expression;
 }
 
-SyntaxKind ParenthesizedExpressionSyntax::get_syntax_kind() {
+SyntaxKind ParenthesizedExpressionSyntax::get_kind() {
 	return SyntaxKind::PARENTHESIZED_EXP;
 }
 
