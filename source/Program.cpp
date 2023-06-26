@@ -2,10 +2,10 @@
 #include <cctype>
 #include <string>
 
-#include "Evaluator.h"
-#include "Parser.h"
-#include "Lexer.h"
-#include "SyntaxNode.h"
+#include "syntax/Evaluator.h"
+#include "syntax/Parser.h"
+#include "syntax/Lexer.h"
+#include "syntax/SyntaxNode.h"
 
 void pretty_print(SyntaxNode* node, std::string indent, bool is_last) {
 	// ├──
