@@ -3,13 +3,14 @@
 
 #include <iostream>
 #include "SyntaxNode.h"
+#include "../binding/Binder.h"
 
 class Evaluator {
 	private:
-		ExpressionSyntax* root;
+		BoundExpression* root;
 		int evaluate_expression(ExpressionSyntax* node);
 	public:
-		Evaluator(ExpressionSyntax* _root);
+		Evaluator(BoundExpression* _root);
 		int evaluate();
 };
 
